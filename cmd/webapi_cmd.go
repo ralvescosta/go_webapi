@@ -5,7 +5,10 @@ import (
 )
 
 func WebApi() error {
-	configs := infra.WebApiConfig{}
+	configs := infra.WebApiConfig{
+		AppHost: "0.0.0.0",
+		AppPort: 3333,
+	}
 
-	return infra.Server(&configs)
+	return infra.Start(&configs)
 }

@@ -1,7 +1,18 @@
 package infra
 
-type WebApiConfig struct{}
+import (
+	"fmt"
 
-func Server(config *WebApiConfig) error {
-	return nil
+	"github.com/gin-gonic/gin"
+)
+
+type WebApiConfig struct {
+	AppHost string
+	AppPort int
+}
+
+func Start(config *WebApiConfig) error {
+	router := gin.Default()
+
+	return router.Run(fmt.Sprintf("%s:%d", config.AppHost, config.AppPort))
 }
