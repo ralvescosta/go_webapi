@@ -5,7 +5,7 @@ import (
 )
 
 func WebApi() error {
-	infra.SimpleServer()
+	configs := infra.WebApiConfig{}
 
-	return nil
+	return infra.Server(&configs)
 }
