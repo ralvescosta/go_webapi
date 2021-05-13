@@ -1,12 +1,14 @@
 package infra
 
 import (
+	"errors"
 	"fmt"
+
+	"github.com/gin-gonic/gin"
+
 	"webapi/pkg/app"
 	httphandlers "webapi/pkg/interface/http_handlers"
 	"webapi/pkg/presentation"
-
-	"github.com/gin-gonic/gin"
 )
 
 type WebApiConfig struct {
@@ -25,7 +27,7 @@ func Start(config *WebApiConfig) error {
 
 	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
 	if err != nil {
-		return err
+		return errors.New("DB CONNECTION ERROR - " + err.Error())
 	}
 	defer func() {
 		if db != nil {
