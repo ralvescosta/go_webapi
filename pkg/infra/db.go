@@ -1,37 +1,24 @@
 package infra
 
-type Db interface {
-	Create() error
-	GetOne() error
-	GetAll() error
-	Update() error
-	Delete() error
-}
+import (
+	"database/sql"
+	"fmt"
 
-type PostgreDb struct{}
+	_ "github.com/lib/pq"
+)
 
-type dbConn struct {
-	db *PostgreDb
-}
-
-func (conn dbConn) Create() error {
-	return nil
-}
-func (conn dbConn) GetOne() error {
-	return nil
-}
-func (conn dbConn) GetAll() error {
-	return nil
-}
-func (conn dbConn) Update() error {
-	return nil
-}
-func (conn dbConn) Delete() error {
-	return nil
-}
-
-func NewDbContext(db *PostgreDb) Db {
-	return &dbConn{
-		db: db,
+func GetConnection(host string, port int, user, password, dbName string) (*sql.DB, error) {
+	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbName)
+	db, err := sql.Open("postgres", connectionString)
+	if err != nil {
+		return nil, err
 	}
+
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }

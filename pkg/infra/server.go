@@ -10,12 +10,28 @@ import (
 )
 
 type WebApiConfig struct {
+	DBHost     string
+	DBPort     int
+	DBUser     string
+	DBPassword string
+	DBName     string
+
 	AppHost string
 	AppPort int
 }
 
 func Start(config *WebApiConfig) error {
 	router := gin.Default()
+
+	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if db != nil {
+			db.Close()
+		}
+	}()
 
 	// Register All Routes
 	userService := app.NewUserService()
