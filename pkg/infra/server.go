@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"webapi/pkg/app"
-	httphandlers "webapi/pkg/interface/http_handlers"
+	"webapi/pkg/app/services"
+	httphandlers "webapi/pkg/interfaces/http_handlers"
 	"webapi/pkg/presentation"
 )
 
@@ -36,7 +36,7 @@ func Start(config *WebApiConfig) error {
 	}()
 
 	// Register All Routes
-	userService := app.NewUserService()
+	userService := services.NewUserService()
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
 	presentation.NewUserRoutes(router, userHTTPHandler)
 

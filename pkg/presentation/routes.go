@@ -3,7 +3,7 @@ package presentation
 import (
 	"github.com/gin-gonic/gin"
 
-	httphandlers "webapi/pkg/interface/http_handlers"
+	httphandlers "webapi/pkg/interfaces/http_handlers"
 )
 
 func NewUserRoutes(router *gin.Engine, handler httphandlers.IUserHTTPHandler) {
