@@ -2,7 +2,7 @@ package services
 
 import (
 	"webapi/pkg/app/dtos"
-	"webapi/pkg/app/interfaces"
+	i "webapi/pkg/app/interfaces"
 )
 
 type IUserService interface {
@@ -10,13 +10,29 @@ type IUserService interface {
 }
 
 type userService struct {
-	repo interfaces.IUserRepository
+	repo i.IUserRepository
+	hash i.IHasher
 }
 
 func (s *userService) Register(user *dtos.UserDto) error {
+
+	passHashed, err := s.hash.Hahser(user.Password)
+	if err != nil {
+		return err
+	}
+
+	user.Password = passHashed
+	_, err = s.repo.Create(user)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func NewUserService() IUserService {
-	return &userService{}
+func NewUserService(repo i.IUserRepository, hash i.IHasher) IUserService {
+	return &userService{
+		repo: repo,
+		hash: hash,
+	}
 }

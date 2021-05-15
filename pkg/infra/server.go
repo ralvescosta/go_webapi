@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"webapi/pkg/app/services"
+	"webapi/pkg/infra/hasher"
+	"webapi/pkg/infra/repos"
 	httphandlers "webapi/pkg/interfaces/http_handlers"
 	"webapi/pkg/presentation"
 )
@@ -34,9 +36,12 @@ func Start(config *WebApiConfig) error {
 			db.Close()
 		}
 	}()
+	// Create Infra Instancies
+	userRepo := repos.NewUserRepository(db)
+	hasher := hasher.NewHahser()
 
 	// Register All Routes
-	userService := services.NewUserService()
+	userService := services.NewUserService(userRepo, hasher)
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
 	presentation.NewUserRoutes(router, userHTTPHandler)
 
