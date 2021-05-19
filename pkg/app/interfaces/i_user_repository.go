@@ -6,5 +6,5 @@ import (
 )
 
 type IUserRepository interface {
-	Create(user *dtos.UserDto) (entities.User, error)
+	Create(user *dtos.UserDto) (*entities.User, error)
 }

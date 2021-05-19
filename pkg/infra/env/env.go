@@ -10,7 +10,7 @@ import (
 )
 
 func ConfigEnvs() {
-	profile := os.Getenv("SERVICES_PROFILE")
+	profile := os.Getenv("GO_ENV")
 
 	viper.SetConfigName(".env." + strings.ToLower(profile))
 	viper.SetConfigType("env")

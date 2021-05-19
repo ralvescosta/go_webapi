@@ -12,8 +12,36 @@ type userRepository struct {
 	db *sql.DB
 }
 
-func (r userRepository) Create(user *dtos.UserDto) (entities.User, error) {
-	return entities.User{}, nil
+func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
+
+	sql := "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *"
+
+	prepare, err := r.db.Prepare(sql)
+	if err != nil {
+		return nil, err
+	}
+
+	entity := &entities.User{}
+	err = prepare.QueryRow(
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.Password,
+	).Scan(
+		&entity.Id,
+		&entity.FirstName,
+		&entity.LastName,
+		&entity.Email,
+		&entity.Password,
+		&entity.CreatedAt,
+		&entity.UpdatedAt,
+		&entity.DeletedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
 }
 
 func NewUserRepository(db *sql.DB) interfaces.IUserRepository {

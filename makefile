@@ -1,14 +1,14 @@
 migrate:
-	SERVICES_PROFILE="development" go run migrations/main.go
+	GO_ENV="development" go run migrations/main.go
 
 run:
-	SERVICES_PROFILE="development" go run main.go
+	GO_ENV="development" go run main.go
 
 test:
-	SERVICES_PROFILE="development" go test ./... -v
+	GO_ENV="development" go test ./... -v
 
 test-cov:
-	SERVICES_PROFILE="development" go test ./... -cover -v -coverprogile=c.out && go tool cover -html=c.out -o coverage.html
+	GO_ENV="development" go test ./... -cover -v -coverprogile=c.out && go tool cover -html=c.out -o coverage.html
 
 build:
 	go build -ldflags "-s -w" main.go
