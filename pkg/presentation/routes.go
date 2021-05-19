@@ -13,3 +13,7 @@ func NewUserRoutes(router *gin.Engine, handler httphandlers.IUserHTTPHandler) {
 	router.PUT("/users/{id}", handler.UpdateById)
 	router.DELETE("/users/{id}", handler.DeleteById)
 }
+
+func NewAuthenticationRoute(router *gin.Engine, handler httphandlers.IAuthenticationHTTPHandler) {
+	router.POST("/authentication", handler.Create)
+}
