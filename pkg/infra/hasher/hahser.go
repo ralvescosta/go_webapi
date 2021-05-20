@@ -18,6 +18,14 @@ func (h hasher) Hahser(text string) (string, error) {
 	return string(hashed), nil
 }
 
+func (h hasher) Verify(originalText, hashedText string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedText), []byte(originalText)); err != nil {
+		return false
+	}
+
+	return true
+}
+
 func NewHahser() interfaces.IHasher {
 	return &hasher{}
 }

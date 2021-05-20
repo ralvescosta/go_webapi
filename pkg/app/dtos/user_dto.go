@@ -15,26 +15,25 @@ type UserDto struct {
 
 func (u UserDto) Validate() error {
 	if u.FirstName == "" {
-		return err.NewEntityError("fistName is required")
+		return err.NewValidationError("fistName is required")
 	}
 	if u.LastName == "" {
-		return err.NewEntityError("lastName is required")
+		return err.NewValidationError("lastName is required")
 	}
 	if u.Email == "" {
-		return err.NewEntityError("email is required")
+		return err.NewValidationError("email is required")
 	}
 	if u.Password == "" {
-		return err.NewEntityError("pasword is required")
+		return err.NewValidationError("pasword is required")
 	}
-
 	if len(u.Password) < 6 {
-		return err.NewEntityError("Password to small")
+		return err.NewValidationError("Password to small")
 	}
 
 	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 	suc := re.MatchString(u.Email)
 	if !suc {
-		return err.NewEntityError("Email in Wrong Format")
+		return err.NewValidationError("Email in Wrong Format")
 	}
 
 	return nil

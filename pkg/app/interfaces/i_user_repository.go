@@ -7,4 +7,5 @@ import (
 
 type IUserRepository interface {
 	Create(user *dtos.UserDto) (*entities.User, error)
+	FindByEmail(email string) (*entities.User, error)
 }

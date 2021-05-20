@@ -45,5 +45,9 @@ func Start(config *WebApiConfig) error {
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
 	presentation.NewUserRoutes(router, userHTTPHandler)
 
+	authService := services.NewAuthenticationUser(userRepo, hasher)
+	authHTTPHandler := httphandlers.NewAuthenticationHTTPHandler(authService)
+	presentation.NewAuthenticationRoute(router, authHTTPHandler)
+
 	return router.Run(fmt.Sprintf("%s:%d", config.AppHost, config.AppPort))
 }
