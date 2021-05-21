@@ -20,13 +20,14 @@ func GenerateToken() (string, error) {
 		return "", errors.New("error when try to create rsa private key")
 	}
 
-	claims := make(jwt.MapClaims)
-	claims["jti"] = "1"
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
-	claims["iat"] = time.Now().Unix()
-	claims["nbf"] = time.Now().Unix()
-	claims["iss"] = "iss"
-	claims["aud"] = "aud"
+	claims := jwt.StandardClaims{
+		Audience:  "aud",
+		Issuer:    "iss",
+		ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
+		Id:        "1",
+		IssuedAt:  time.Now().Unix(),
+		NotBefore: time.Now().Add(time.Hour * 1).Unix(),
+	}
 
 	t, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(privateKey)
 	if err != nil {
