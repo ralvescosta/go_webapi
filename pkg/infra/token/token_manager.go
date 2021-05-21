@@ -21,7 +21,7 @@ func GenerateToken() (string, error) {
 
 	claims := jwt.StandardClaims{
 		Audience:  "aud",
-		Issuer:    "iss",
+		Issuer:    "Go WebApi Templete",
 		ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
 		Id:        "1",
 		IssuedAt:  time.Now().Unix(),
