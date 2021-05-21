@@ -2,58 +2,72 @@ package token
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+
+	"webapi/pkg/app/dtos"
+	"webapi/pkg/app/interfaces"
 )
 
-func GenerateToken() (string, error) {
+type tokenManager struct{}
+
+func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error) {
 	privateKeyInBytes, err := ioutil.ReadFile("cert/id_rsa")
 	if err != nil {
+		log.Println("Token Manager - GenerateToken - ", err)
 		return "", errors.New("error when try to read rsa private key")
 	}
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privateKeyInBytes)
 	if err != nil {
+		log.Println("Token Manager - GenerateToken - ", err)
 		return "", errors.New("error when try to create rsa private key")
 	}
 
 	claims := jwt.StandardClaims{
-		Audience:  "aud",
+		Audience:  tokenData.Audience,
 		Issuer:    "Go WebApi Templete",
-		ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
-		Id:        "1",
+		ExpiresAt: tokenData.ExpireIn.Unix(),
+		Id:        fmt.Sprintf("%d", tokenData.Id),
 		IssuedAt:  time.Now().Unix(),
-		NotBefore: time.Now().Add(time.Hour * 1).Unix(),
+		NotBefore: tokenData.ExpireIn.Unix(),
 	}
 
-	t, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(privateKey)
+	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(privateKey)
 	if err != nil {
+		log.Println("Token Manager - GenerateToken - ", err)
 		return "", errors.New("error when try to create jwt")
 	}
 
-	return t, nil
+	return token, nil
 }
 
-func VerifyToken(token string) (interface{}, error) {
+func (t tokenManager) VerifyToken(token string) (interface{}, error) {
 	publicKeyInBytes, err := ioutil.ReadFile("cert/id_rsa.pub")
 	if err != nil {
+		log.Println("Token Manager - VerifyToken - ", err)
 		return "", errors.New("error when try to read rsa public key")
 	}
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(publicKeyInBytes)
 	if err != nil {
+		log.Println("Token Manager - VerifyToken - ", err)
 		return "", errors.New("error when try to create rsa public key")
 	}
 
 	tok, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
 		if _, ok := jwtToken.Method.(*jwt.SigningMethodRSA); !ok {
+			log.Println("Token Manager - VerifyToken - ", err)
 			return nil, errors.New("unexpected method")
 		}
 		return publicKey, nil
 	})
 	if err != nil {
+		log.Println("Token Manager - VerifyToken - ", err)
 		return nil, errors.New("invalid token")
 	}
 
@@ -67,4 +81,8 @@ func VerifyToken(token string) (interface{}, error) {
 	}
 
 	return claims, nil
+}
+
+func NewTokenManager() interfaces.ITokenManager {
+	return &tokenManager{}
 }

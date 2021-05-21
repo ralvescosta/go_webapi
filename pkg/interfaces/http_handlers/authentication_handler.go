@@ -33,13 +33,13 @@ func (h authenticationHTTPHandler) Create(c *gin.Context) {
 	authenticatedUser, err := h.authenticationUserService.Perform(authDto.Email, authDto.Password)
 	if err != nil {
 		switch err.(type) {
-		case *errors.InternalError:
+		case errors.InternalError:
 			interfaces.InternalServerError(c, err.Error())
 			return
-		case *errors.NotFoundError:
+		case errors.NotFoundError:
 			interfaces.NotFound(c, "User Not Found")
 			return
-		case *errors.UnauthorizeError:
+		case errors.UnauthorizeError:
 			interfaces.Unauthorized(c, err.Error())
 			return
 		default:

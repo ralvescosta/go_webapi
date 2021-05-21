@@ -9,6 +9,7 @@ import (
 	"webapi/pkg/app/services"
 	"webapi/pkg/infra/hasher"
 	"webapi/pkg/infra/repos"
+	"webapi/pkg/infra/token"
 	httphandlers "webapi/pkg/interfaces/http_handlers"
 	"webapi/pkg/presentation"
 )
@@ -39,13 +40,14 @@ func Start(config *WebApiConfig) error {
 	// Create Infra Instancies
 	userRepo := repos.NewUserRepository(db)
 	hasher := hasher.NewHahser()
+	tokenManager := token.NewTokenManager()
 
 	// Register All Routes
 	userService := services.NewUserService(userRepo, hasher)
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
 	presentation.NewUserRoutes(router, userHTTPHandler)
 
-	authService := services.NewAuthenticationUser(userRepo, hasher)
+	authService := services.NewAuthenticationUser(userRepo, hasher, tokenManager)
 	authHTTPHandler := httphandlers.NewAuthenticationHTTPHandler(authService)
 	presentation.NewAuthenticationRoute(router, authHTTPHandler)
 

@@ -1,6 +1,8 @@
 package hasher
 
 import (
+	"log"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"webapi/pkg/app/errors"
@@ -12,6 +14,7 @@ type hasher struct{}
 func (h hasher) Hahser(text string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(text), 9)
 	if err != nil {
+		log.Println("Hasher - Hahser - ", err)
 		return "", errors.NewInternalError(err.Error())
 	}
 
