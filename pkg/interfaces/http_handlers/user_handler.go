@@ -36,10 +36,10 @@ func (h *userHTTPHandler) Create(c *gin.Context) {
 
 	if err := h.userService.Register(userDto); err != nil {
 		switch err.(type) {
-		case *errors.InternalError:
+		case errors.InternalError:
 			interfaces.InternalServerError(c, "Some internal Error occur, try again latter!")
 			return
-		case *errors.AlreadyExisteError:
+		case errors.AlreadyExisteError:
 			interfaces.Conflict(c, "User Already Exist!")
 			return
 		default:
