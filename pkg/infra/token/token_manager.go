@@ -2,7 +2,6 @@ package token
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"time"
 
@@ -48,19 +47,23 @@ func VerifyToken(token string) (interface{}, error) {
 		return "", errors.New("error when try to create rsa public key")
 	}
 
-	tok, err := jwt.Parse(token, func(jwtToken *jwt.Token) (interface{}, error) {
+	tok, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
 		if _, ok := jwtToken.Method.(*jwt.SigningMethodRSA); !ok {
-			return nil, fmt.Errorf("unexpected method: %s", jwtToken.Header["alg"])
+			return nil, errors.New("unexpected method")
 		}
 		return publicKey, nil
 	})
 	if err != nil {
-		return "", errors.New("invalid token")
+		return nil, errors.New("invalid token")
 	}
 
-	claims, ok := tok.Claims.(jwt.MapClaims)
+	claims, ok := tok.Claims.(*jwt.StandardClaims)
 	if !ok || !tok.Valid {
-		return nil, fmt.Errorf("validate: invalid")
+		return nil, errors.New("invalid token")
+	}
+
+	if claims.ExpiresAt < time.Now().UTC().Unix() {
+		return nil, errors.New("jwt is expired")
 	}
 
 	return claims, nil
