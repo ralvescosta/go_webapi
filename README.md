@@ -12,12 +12,18 @@ This project was created in order to improve my knowledge in GoLang and REST API
 
 ## Features
 
-<span style="color:green">Was Implemented</span> - <span style="color:grey">Work Now</span> - <span style="color:purple">Future feature</span> 
+**LEGEND**
 
-- <span style="color:green">User Management</span>
-- <span style="color:grey">Session using JWT with asymmetric keys</span> 
-- <span style="color:purple">Authentication Middleware</span> 
-- <span style="color:purple">Authorization Middleware</span> 
+📝 Was Implemented
+
+🧑‍💻 Work Now
+
+💻 Future feature 
+
+- 📝 User Management
+- 🧑‍💻 Session using JWT with asymmetric keys
+- 💻 Authentication Middleware
+- 💻 Authorization Middleware
 
 ## Installation
 
