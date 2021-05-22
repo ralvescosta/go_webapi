@@ -12,7 +12,7 @@ This project was created in order to improve my knowledge in GoLang and REST API
 
 ## Features
 
-<tspan fill="red">Was Implemented</tspan> - <span class="text-gray">Work Now</span> - <span class="text-purple">Future feature</span> 
+<p style='color:red'>Was Implemented</p> - <span class="text-gray">Work Now</span> - <span class="text-purple">Future feature</span> 
 
 - <div class="text-green">User Management</div>
 - <div class="text-gray">Session using JWT with asymmetric keys</div> 
