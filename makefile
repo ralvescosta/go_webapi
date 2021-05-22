@@ -16,3 +16,17 @@ test-cov:
 
 build:
 	go build -ldflags "-s -w" main.go
+
+private-key:
+	if ! [ -d "cert" ]; then \
+		echo "Creating covorage folder" ; \
+		mkdir cert; \
+	fi
+	openssl genrsa -out cert/id_rsa 4096
+
+public-key:
+	if ! [ -d "cert" ]; then \
+		echo "Creating covorage folder" ; \
+		mkdir cert; \
+	fi
+	openssl rsa -in cert/id_rsa -pubout -out cert/id_rsa.pub
