@@ -5,7 +5,7 @@ import (
 	"webapi/pkg/app/validator"
 )
 
-func ValidateCreateUserBody(data *dtos.UserDto) (error, []string) {
+func ValidateCreateUserBody(data *dtos.UserDto) ([]string, error) {
 	validator := validator.Validator{}
 
 	validator.Set(data.FirstName, "FirstName").Required()
@@ -13,5 +13,5 @@ func ValidateCreateUserBody(data *dtos.UserDto) (error, []string) {
 	validator.Set(data.Email, "Email").Email().Required()
 	validator.Set(data.Password, "Password").MinString(6).Required()
 
-	return validator.Validate(), validator.Messages
+	return validator.Messages, validator.Validate()
 }

@@ -30,7 +30,7 @@ func (h *userHTTPHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err, messages := validators.ValidateCreateUserBody(userDto)
+	messages, err := validators.ValidateCreateUserBody(userDto)
 	if err != nil {
 		interfaces.InvalidBody(c, messages)
 		return
