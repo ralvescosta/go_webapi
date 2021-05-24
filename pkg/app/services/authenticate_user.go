@@ -25,7 +25,7 @@ func (s authenticationUser) Perform(email string, password string) (*entities.Au
 	}
 
 	if user == nil || user.Email == "" || user.Password == "" {
-		errors.NewBadRequestError("Email is wrong or not exist")
+		return nil, errors.NewBadRequestError("Email is wrong or not exist")
 	}
 	if isPasswordValid := s.hash.Verify(password, user.Password); !isPasswordValid {
 		return nil, errors.NewBadRequestError("User Password is wrong")
