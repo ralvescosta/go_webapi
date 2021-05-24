@@ -5,6 +5,7 @@ import (
 	"webapi/pkg/app/errors"
 	"webapi/pkg/app/services"
 	interfaces "webapi/pkg/interfaces"
+	"webapi/pkg/interfaces/validators"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,8 +26,9 @@ func (h authenticationHTTPHandler) Create(c *gin.Context) {
 		return
 	}
 
-	if err := authDto.Validate(); err != nil {
-		interfaces.BadRequest(c, err.Error())
+	messages, err := validators.ValidateAuthUserBody(authDto)
+	if err != nil {
+		interfaces.InvalidBody(c, messages)
 		return
 	}
 

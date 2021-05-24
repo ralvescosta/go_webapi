@@ -7,6 +7,7 @@ import (
 	"webapi/pkg/app/errors"
 	"webapi/pkg/app/services"
 	interfaces "webapi/pkg/interfaces"
+	"webapi/pkg/interfaces/validators"
 )
 
 type IUserHTTPHandler interface {
@@ -29,8 +30,9 @@ func (h *userHTTPHandler) Create(c *gin.Context) {
 		return
 	}
 
-	if err := userDto.Validate(); err != nil {
-		interfaces.BadRequest(c, err.Error())
+	messages, err := validators.ValidateCreateUserBody(userDto)
+	if err != nil {
+		interfaces.InvalidBody(c, messages)
 		return
 	}
 
