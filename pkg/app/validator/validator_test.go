@@ -38,6 +38,16 @@ func TestRequired_ShouldAddMessageIfThereIsNoValue(t *testing.T) {
 	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Is Required", propertyName)})
 }
 
+func TestMinInt_ShouldAddMessageIfValueIsNotAInt(t *testing.T) {
+	var validator Validator = Validator{}
+	value := ""
+	propertyName := "SomeProperty"
+
+	validator.Set(value, propertyName).MinInt(1)
+
+	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Invalid Type", propertyName)})
+}
+
 func TestMinInt_ShouldDontAddMessageIfValueIsBiggerThen(t *testing.T) {
 	var validator Validator = Validator{}
 	value := 5
@@ -58,6 +68,16 @@ func TestMinInt_ShouldAddMessageIfValueIsNoBiggerThen(t *testing.T) {
 	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Is Required", propertyName)})
 }
 
+func TestMinString_ShouldAddMessageIfValueIsNotAString(t *testing.T) {
+	var validator Validator = Validator{}
+	value := 5
+	propertyName := "SomeProperty"
+
+	validator.Set(value, propertyName).MinString(1)
+
+	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Invalid Type", propertyName)})
+}
+
 func TestMinString_ShouldDontAddMessageIfValueIsBiggerThen(t *testing.T) {
 	var validator Validator = Validator{}
 	value := "something"
@@ -76,6 +96,16 @@ func TestMinString_ShouldAddMessageIfValueIsNoBiggerThen(t *testing.T) {
 	validator.Set(value, propertyName).MinString(20)
 
 	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Is Required", propertyName)})
+}
+
+func TestMinEmail_ShouldAddMessageIfValueIsNotAString(t *testing.T) {
+	var validator Validator = Validator{}
+	value := 5
+	propertyName := "SomeProperty"
+
+	validator.Set(value, propertyName).Email()
+
+	assert.Equal(t, validator.Messages, []string{fmt.Sprintf("Property: %s - Email in Wrong Format", propertyName)})
 }
 
 func TestEmail_ShouldDontAddMessageIfValueIsValidEmail(t *testing.T) {

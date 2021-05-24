@@ -6,7 +6,8 @@ import (
 )
 
 type hasherMocked struct {
-	failure bool
+	failure      bool
+	verifyResult bool
 }
 
 func (m hasherMocked) Hahser(text string) (string, error) {
@@ -18,9 +19,9 @@ func (m hasherMocked) Hahser(text string) (string, error) {
 }
 
 func (m hasherMocked) Verify(originalText, hashedText string) bool {
-	return true
+	return m.verifyResult
 }
 
-func NewHasherMock(failure bool) interfaces.IHasher {
-	return &hasherMocked{failure: failure}
+func NewHasherMock(failure, verifyResult bool) interfaces.IHasher {
+	return &hasherMocked{failure: failure, verifyResult: verifyResult}
 }
