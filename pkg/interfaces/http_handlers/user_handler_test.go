@@ -6,9 +6,17 @@ import (
 	"webapi/mocks"
 
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestCreate(t *testing.T) {
+func TestUserHandler_ShouldReturnIUserHTTPHandlerInstance(t *testing.T) {
+	userServiceMock := mocks.NewUserServicesMock()
+	userHandler := NewUserHTTPHandler(userServiceMock)
+
+	assert.Implements(t, new(IUserHTTPHandler), userHandler)
+}
+
+func TestUserHandler_Create(t *testing.T) {
 	userServiceMock := mocks.NewUserServicesMock()
 	handler := userHTTPHandler{
 		userService: userServiceMock,
@@ -17,48 +25,4 @@ func TestCreate(t *testing.T) {
 	contextMock, _ := gin.CreateTestContext(httptest.NewRecorder())
 
 	handler.Create(contextMock)
-}
-
-func TestGetById(t *testing.T) {
-	userServiceMock := mocks.NewUserServicesMock()
-	handler := userHTTPHandler{
-		userService: userServiceMock,
-	}
-
-	contextMock, _ := gin.CreateTestContext(httptest.NewRecorder())
-
-	handler.GetById(contextMock)
-}
-
-func TestGetByAll(t *testing.T) {
-	userServiceMock := mocks.NewUserServicesMock()
-	handler := userHTTPHandler{
-		userService: userServiceMock,
-	}
-
-	contextMock, _ := gin.CreateTestContext(httptest.NewRecorder())
-
-	handler.GetAll(contextMock)
-}
-
-func TestUpdateById(t *testing.T) {
-	userServiceMock := mocks.NewUserServicesMock()
-	handler := userHTTPHandler{
-		userService: userServiceMock,
-	}
-
-	contextMock, _ := gin.CreateTestContext(httptest.NewRecorder())
-
-	handler.UpdateById(contextMock)
-}
-
-func TestDeleteById(t *testing.T) {
-	userServiceMock := mocks.NewUserServicesMock()
-	handler := userHTTPHandler{
-		userService: userServiceMock,
-	}
-
-	contextMock, _ := gin.CreateTestContext(httptest.NewRecorder())
-
-	handler.DeleteById(contextMock)
 }
