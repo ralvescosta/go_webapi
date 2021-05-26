@@ -1,8 +1,8 @@
-name: Go WebApi Develop PR CI
+name: Go WebApi Main CI
 
 on: 
-  pull_request:
-    branches: [develop]
+  push:
+    branches: [main]
 
 jobs:
   test:
@@ -18,5 +18,7 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Build
+      run: go build -ldflags "-s -w" main.go
     - name: Test
       run: go test ./...
