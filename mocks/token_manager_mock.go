@@ -16,11 +16,11 @@ func (m tokenManagerMocked) GenerateToken(tokenData *dtos.TokenDataDto) (string,
 	}
 	return "", nil
 }
-func (m tokenManagerMocked) VerifyToken(token string) (interface{}, error) {
+func (m tokenManagerMocked) VerifyToken(token string) (*dtos.AuthenticatedUserDto, error) {
 	if m.failure {
-		return "", errors.New("Error")
+		return nil, errors.New("Error")
 	}
-	return "", nil
+	return nil, nil
 }
 
 func NewTokenManagerMock(failure bool) interfaces.ITokenManager {
