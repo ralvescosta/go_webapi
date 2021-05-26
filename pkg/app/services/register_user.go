@@ -15,7 +15,6 @@ type userService struct {
 }
 
 func (s *userService) Register(user *dtos.UserDto) error {
-
 	passHashed, err := s.hash.Hahser(user.Password)
 	if err != nil {
 		return err

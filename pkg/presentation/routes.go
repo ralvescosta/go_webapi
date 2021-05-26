@@ -8,10 +8,6 @@ import (
 
 func NewUserRoutes(router *gin.Engine, handler httphandlers.IUserHTTPHandler) {
 	router.POST("/users", handler.Create)
-	router.GET("/users", handler.GetAll)
-	router.GET("/users/{id}", handler.GetById)
-	router.PUT("/users/{id}", handler.UpdateById)
-	router.DELETE("/users/{id}", handler.DeleteById)
 }
 
 func NewAuthenticationRoute(router *gin.Engine, handler httphandlers.IAuthenticationHTTPHandler) {

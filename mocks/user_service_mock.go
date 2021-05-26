@@ -4,12 +4,12 @@ import (
 	"webapi/pkg/app/dtos"
 )
 
-type userServiceMocked struct{}
+type UserServiceMocked struct{}
 
-func (m userServiceMocked) Register(user *dtos.UserDto) error {
+func (m UserServiceMocked) Register(user *dtos.UserDto) error {
 	return nil
 }
 
-func NewUserServicesMock() *userServiceMocked {
-	return &userServiceMocked{}
+func NewUserServicesMock() *UserServiceMocked {
+	return &UserServiceMocked{}
 }
