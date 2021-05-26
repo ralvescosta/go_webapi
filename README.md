@@ -21,9 +21,8 @@ This project was created in order to improve my knowledge in GoLang and REST API
 💻 Future feature 
 
 - 📝 User Management
-- 🧑‍💻 Session using JWT with asymmetric keys
-- 💻 Authentication Middleware
-- 💻 Authorization Middleware
+- 📝 Session using JWT with asymmetric keys
+- 🧑‍💻 Authentication Middleware
 
 ## Installation
 
