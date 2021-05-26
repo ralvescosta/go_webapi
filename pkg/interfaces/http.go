@@ -10,6 +10,10 @@ func BadRequest(c *gin.Context, message string) {
 	c.JSON(http.StatusBadRequest, gin.H{"message": message})
 }
 
+func InvalidBody(c *gin.Context, errors []string) {
+	c.JSON(http.StatusBadRequest, gin.H{"message": "Wrong Body", "errors": errors})
+}
+
 func Unauthorized(c *gin.Context, message string) {
 	c.JSON(http.StatusUnauthorized, gin.H{"message": message})
 }
