@@ -6,8 +6,8 @@ This project was created in order to improve my knowledge in GoLang and REST API
 
 ---
 
-[![Go WebApi PR CI](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_pr_develop.yml/badge.svg?branch=develop)](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_pr_develop.yml)
-[![Go WebApi Push CI](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_develop.yaml/badge.svg?branch=develop)](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_develop.yaml)
+[![Go WebApi Develop CI](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_develop.yaml/badge.svg?branch=develop)](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_develop.yaml)
+[![Go WebApi Main CI](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_main.yaml/badge.svg?branch=main)](https://github.com/ralvescosta/go_webapi/actions/workflows/ci_push_main.yaml)
 
 
 ## Features

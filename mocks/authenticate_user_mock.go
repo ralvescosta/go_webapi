@@ -4,7 +4,7 @@ import "webapi/pkg/app/entities"
 
 type AuthenticationUserMocked struct{}
 
-func (m AuthenticationUserMocked) Perform(email string, password string) (*entities.AuthenticatedUser, error) {
+func (m AuthenticationUserMocked) Perform(email, password string) (*entities.AuthenticatedUser, error) {
 	return nil, nil
 }
 
