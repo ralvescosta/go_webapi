@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -46,17 +47,17 @@ func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error
 	return token, nil
 }
 
-func (t tokenManager) VerifyToken(token string) (interface{}, error) {
+func (t tokenManager) VerifyToken(token string) (*dtos.AuthenticatedUserDto, error) {
 	publicKeyInBytes, err := ioutil.ReadFile("cert/id_rsa.pub")
 	if err != nil {
 		log.Println("Token Manager - VerifyToken - ", err)
-		return "", errors.New("error when try to read rsa public key")
+		return nil, errors.New("error when try to read rsa public key")
 	}
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(publicKeyInBytes)
 	if err != nil {
 		log.Println("Token Manager - VerifyToken - ", err)
-		return "", errors.New("error when try to create rsa public key")
+		return nil, errors.New("error when try to create rsa public key")
 	}
 
 	tok, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
@@ -80,7 +81,12 @@ func (t tokenManager) VerifyToken(token string) (interface{}, error) {
 		return nil, errors.New("jwt is expired")
 	}
 
-	return claims, nil
+	id, _ := strconv.ParseUint(claims.Id, 10, 32)
+	return &dtos.AuthenticatedUserDto{
+		Id:          id,
+		AccessToken: token,
+		ExpireIn:    time.Unix(claims.ExpiresAt, 0),
+	}, nil
 }
 
 func NewTokenManager() interfaces.ITokenManager {
