@@ -17,8 +17,12 @@ func WebApi() error {
 		DBPassword: viper.GetString("DB_PASSWORD"),
 		DBName:     viper.GetString("DB_NAME"),
 
+		Env:     viper.GetString("GO_ENV"),
 		AppHost: viper.GetString("APP_HOST"),
 		AppPort: viper.GetInt("APP_PORT"),
+		GinMode: viper.GetString("GIN_MODE"),
+
+		WebApiReqsLog: viper.GetString("WEBAPI_REQS_LOG"),
 	}
 
 	return infra.Start(&configs)
