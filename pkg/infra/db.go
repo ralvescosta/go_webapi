@@ -13,13 +13,13 @@ func GetConnection(host string, port int, user, password, dbName string) (*sql.D
 		host, port, user, password, dbName)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
-		log.Println("DB - GetConnection - ", err)
+		log.Println(err)
 		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Println("DB - GetConnection - ", err)
+		log.Println(err)
 		return nil, err
 	}
 
