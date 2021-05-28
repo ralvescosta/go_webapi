@@ -14,7 +14,7 @@ type hasher struct{}
 func (h hasher) Hahser(text string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(text), 9)
 	if err != nil {
-		log.Println("Hasher - Hahser - ", err)
+		log.Println(err)
 		return "", errors.NewInternalError(err.Error())
 	}
 

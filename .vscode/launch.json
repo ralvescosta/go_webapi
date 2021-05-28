@@ -8,7 +8,8 @@
       "mode": "auto",
       "program": "${workspaceFolder}",
       "env": {
-        "GO_ENV": "development"
+        "GO_ENV": "development",
+        "GIN_MODE": "debug"
       },
       "args": ["run", "main.go"]
     }

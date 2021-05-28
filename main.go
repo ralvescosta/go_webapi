@@ -9,6 +9,6 @@ import (
 func main() {
 	err := cmd.WebApi()
 	if err != nil {
-		log.Fatal("Deu ruim: ", err)
+		log.Fatal(err)
 	}
 }
