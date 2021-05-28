@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -33,8 +34,13 @@ type WebApiConfig struct {
 
 func Start(config *WebApiConfig) error {
 	if config.Env != "development" {
-		f, _ := os.Create(config.WebApiReqsLog)
-		gin.DefaultWriter = io.MultiWriter(f)
+		writerReqsLogs, err := os.Create(config.WebApiReqsLog)
+		if err != nil {
+			err = fmt.Errorf("server.Start - create log writer")
+			log.Fatal(err)
+		}
+		gin.DefaultWriter = io.MultiWriter(writerReqsLogs)
+		log.SetOutput(writerReqsLogs)
 	}
 
 	router := gin.Default()
