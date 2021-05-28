@@ -1,7 +1,6 @@
 package hasher
 
 import (
-	"fmt"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -15,8 +14,7 @@ type hasher struct{}
 func (h hasher) Hahser(text string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(text), 9)
 	if err != nil {
-		err = fmt.Errorf("hasher.Hahser - generate password hash: %v", err)
-		log.Print(err)
+		log.Printf("hasher.Hahser - generate password hash: %v", err)
 		return "", errors.NewInternalError(err.Error())
 	}
 
