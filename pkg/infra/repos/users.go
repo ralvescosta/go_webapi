@@ -2,6 +2,7 @@ package repos
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"webapi/pkg/app/dtos"
@@ -19,6 +20,7 @@ func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
 
 	prepare, err := r.db.Prepare(sql)
 	if err != nil {
+		err = fmt.Errorf("userRepository.Create - prepare statement: %v", err)
 		log.Print(err)
 		return nil, err
 	}
@@ -40,6 +42,7 @@ func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
 		&entity.DeletedAt,
 	)
 	if err != nil {
+		err = fmt.Errorf("userRepository.Crete - query statement: %v", err)
 		log.Print(err)
 		return nil, err
 	}
@@ -63,6 +66,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 	`
 	prepare, err := r.db.Prepare(sql)
 	if err != nil {
+		err = fmt.Errorf("userRepository.FindByEmail - prepare statement: %v", err)
 		log.Print(err)
 		return nil, err
 	}
@@ -80,6 +84,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 		&entity.DeletedAt,
 	)
 	if err != nil {
+		err = fmt.Errorf("userRepository.FindByEmail - query statement: %v", err)
 		log.Print(err)
 		return nil, err
 	}
