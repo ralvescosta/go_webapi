@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"webapi/pkg/app/services"
+	httphandlers "webapi/pkg/handlers/http_handlers"
 	"webapi/pkg/infra/hasher"
 	"webapi/pkg/infra/repos"
 	"webapi/pkg/infra/token"
-	httphandlers "webapi/pkg/interfaces/http_handlers"
-	"webapi/pkg/presentation"
+	presenter "webapi/pkg/presenter"
 )
 
 type WebApiConfig struct {
@@ -45,11 +45,11 @@ func Start(config *WebApiConfig) error {
 	// Register All Routes
 	userService := services.NewUserService(userRepo, hasher)
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
-	presentation.NewUserRoutes(router, userHTTPHandler)
+	presenter.NewUserRoutes(router, userHTTPHandler)
 
 	authService := services.NewAuthenticationUser(userRepo, hasher, tokenManager)
 	authHTTPHandler := httphandlers.NewAuthenticationHTTPHandler(authService)
-	presentation.NewAuthenticationRoute(router, authHTTPHandler)
+	presenter.NewAuthenticationRoute(router, authHTTPHandler)
 
 	return router.Run(fmt.Sprintf("%s:%d", config.AppHost, config.AppPort))
 }
