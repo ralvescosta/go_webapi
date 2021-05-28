@@ -9,7 +9,7 @@ import (
 )
 
 type IAuthenticationUser interface {
-	Perform(email string, password string) (*entities.AuthenticatedUser, error)
+	Perform(email, password string) (*entities.AuthenticatedUser, error)
 }
 
 type authenticationUser struct {
@@ -18,7 +18,7 @@ type authenticationUser struct {
 	tokenManager i.ITokenManager
 }
 
-func (s authenticationUser) Perform(email string, password string) (*entities.AuthenticatedUser, error) {
+func (s authenticationUser) Perform(email, password string) (*entities.AuthenticatedUser, error) {
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
 		return nil, errors.NewInternalError(err.Error())
