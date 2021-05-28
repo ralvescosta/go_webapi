@@ -19,7 +19,7 @@ func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
 
 	prepare, err := r.db.Prepare(sql)
 	if err != nil {
-		log.Println(err)
+		log.Print(err)
 		return nil, err
 	}
 
@@ -40,7 +40,7 @@ func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
 		&entity.DeletedAt,
 	)
 	if err != nil {
-		log.Println(err)
+		log.Print(err)
 		return nil, err
 	}
 
@@ -63,7 +63,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 	`
 	prepare, err := r.db.Prepare(sql)
 	if err != nil {
-		log.Println(err)
+		log.Print(err)
 		return nil, err
 	}
 
@@ -80,7 +80,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 		&entity.DeletedAt,
 	)
 	if err != nil {
-		log.Println(err)
+		log.Print(err)
 		return nil, err
 	}
 
