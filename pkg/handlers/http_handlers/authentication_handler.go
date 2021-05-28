@@ -44,6 +44,9 @@ func (h authenticationHTTPHandler) Create(c *gin.Context) {
 		case errors.UnauthorizeError:
 			handlers.Unauthorized(c, err.Error())
 			return
+		case errors.BadRequestError:
+			handlers.Unauthorized(c, err.Error())
+			return
 		default:
 			handlers.InternalServerError(c, "Some internal Error occur, try again latter!")
 			return
