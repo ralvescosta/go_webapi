@@ -36,7 +36,7 @@ func (h authenticationHTTPHandler) Create(c *gin.Context) {
 	if err != nil {
 		switch err.(type) {
 		case errors.InternalError:
-			handlers.InternalServerError(c, err.Error())
+			handlers.InternalServerError(c, "Some internal Error occur, try again latter!")
 			return
 		case errors.NotFoundError:
 			handlers.NotFound(c, "User Not Found")

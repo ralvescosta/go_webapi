@@ -19,15 +19,13 @@ type tokenManager struct{}
 func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error) {
 	privateKeyInBytes, err := ioutil.ReadFile("cert/id_rsa")
 	if err != nil {
-		err = fmt.Errorf("tokenManager.GenerateToken - privateKeyInBytes: %v", err)
-		log.Print(err)
+		log.Printf("tokenManager.GenerateToken - privateKeyInBytes: %v", err)
 		return "", errors.New("error when try to read rsa private key")
 	}
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privateKeyInBytes)
 	if err != nil {
-		err = fmt.Errorf("tokenManager.GenerateToken - ParseRSAPrivateKeyFromPEM: %v", err)
-		log.Print(err)
+		log.Printf("tokenManager.GenerateToken - ParseRSAPrivateKeyFromPEM: %v", err)
 		return "", errors.New("error when try to create rsa private key")
 	}
 
@@ -42,8 +40,7 @@ func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error
 
 	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(privateKey)
 	if err != nil {
-		err = fmt.Errorf("tokenManager.GenerateToken - generate token: %v", err)
-		log.Print(err)
+		log.Printf("tokenManager.GenerateToken - generate token: %v", err)
 		return "", errors.New("error when try to create jwt")
 	}
 
@@ -53,22 +50,19 @@ func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error
 func (t tokenManager) VerifyToken(token string) (*dtos.AuthenticatedUserDto, error) {
 	publicKeyInBytes, err := ioutil.ReadFile("cert/id_rsa.pub")
 	if err != nil {
-		err = fmt.Errorf("tokenManager.VerifyToken - publicKeyInBytes: %v", err)
-		log.Print(err)
+		log.Printf("tokenManager.VerifyToken - publicKeyInBytes: %v", err)
 		return nil, errors.New("error when try to read rsa public key")
 	}
 
 	publicKey, err := jwt.ParseRSAPublicKeyFromPEM(publicKeyInBytes)
 	if err != nil {
-		err = fmt.Errorf("tokenManager.VerifyToken - ParseRSAPublicKeyFromPEM: %v", err)
-		log.Print(err)
+		log.Printf("tokenManager.VerifyToken - ParseRSAPublicKeyFromPEM: %v", err)
 		return nil, errors.New("error when try to create rsa public key")
 	}
 
 	tok, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(jwtToken *jwt.Token) (interface{}, error) {
 		if _, ok := jwtToken.Method.(*jwt.SigningMethodRSA); !ok {
-			err = fmt.Errorf("tokenManager.VerifyToken - Parse Jwt: %v", err)
-			log.Print(err)
+			log.Printf("tokenManager.VerifyToken - Parse Jwt: %v", err)
 			return nil, errors.New("unexpected method")
 		}
 		return publicKey, nil
