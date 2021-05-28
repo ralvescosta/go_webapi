@@ -3,6 +3,8 @@ package infra
 import (
 	"errors"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -21,11 +23,20 @@ type WebApiConfig struct {
 	DBPassword string
 	DBName     string
 
+	Env     string
 	AppHost string
 	AppPort int
+	GinMode string
+
+	WebApiReqsLog string
 }
 
 func Start(config *WebApiConfig) error {
+	if config.Env != "development" {
+		f, _ := os.Create(config.WebApiReqsLog)
+		gin.DefaultWriter = io.MultiWriter(f)
+	}
+
 	router := gin.Default()
 
 	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
