@@ -53,3 +53,13 @@ docker-compose up -d
 ```
 
 - Before running the container, create your own database and put the database name into the *.env* files
+
+### Run Migration
+
+```bash
+make migrate
+```
+
+## Articles
+
+- [1] - [GoLang WebApi - pt-BR](https://ralvescosta.medium.com/como-estruturar-webapi-em-golang-e2a41502d809)
