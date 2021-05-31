@@ -80,6 +80,10 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 		&entity.DeletedAt,
 	)
 	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return nil, nil
+		}
+
 		log.Printf("userRepository.FindByEmail - query statement: %v", err)
 		return nil, err
 	}
