@@ -11,8 +11,11 @@ import (
 
 type hasher struct{}
 
+var generateHash = bcrypt.GenerateFromPassword
+var compareHash = bcrypt.CompareHashAndPassword
+
 func (h hasher) Hahser(text string) (string, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(text), 9)
+	hashed, err := generateHash([]byte(text), 9)
 	if err != nil {
 		log.Printf("hasher.Hahser - generate password hash: %v", err)
 		return "", errors.NewInternalError(err.Error())
@@ -22,7 +25,7 @@ func (h hasher) Hahser(text string) (string, error) {
 }
 
 func (h hasher) Verify(originalText, hashedText string) bool {
-	if err := bcrypt.CompareHashAndPassword([]byte(hashedText), []byte(originalText)); err != nil {
+	if err := compareHash([]byte(hashedText), []byte(originalText)); err != nil {
 		return false
 	}
 
