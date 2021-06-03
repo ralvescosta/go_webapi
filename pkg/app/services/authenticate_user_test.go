@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"testing"
 	"webapi/mocks"
 	"webapi/pkg/app/dtos"
@@ -22,7 +23,7 @@ func TestPerform_ShouldAuthenticateUserSuccessfully(t *testing.T) {
 	tokenManagerMock := mocks.NewTokenManagerMock(false)
 	authenticateUserService := NewAuthenticationUser(userRepositoryInMemory, hahserMock, tokenManagerMock)
 
-	result, _ := authenticateUserService.Perform(mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
+	result, _ := authenticateUserService.Perform(context.Background(), mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
 
 	assert.NotNil(t, result)
 
@@ -36,7 +37,7 @@ func TestPerform_ShouldReturnInternalErrorIfOccurErrorInRepository(t *testing.T)
 	tokenManagerMock := mocks.NewTokenManagerMock(false)
 	authenticateUserService := NewAuthenticationUser(userRepositoryInMemory, hahserMock, tokenManagerMock)
 
-	result, err := authenticateUserService.Perform(mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
+	result, err := authenticateUserService.Perform(context.Background(), mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
 
 	assert.Nil(t, result)
 	assert.IsType(t, err, errors.InternalError{})
@@ -48,7 +49,7 @@ func TestPerform_ShouldReturnBadRequestErrorIfUserDontExist(t *testing.T) {
 	tokenManagerMock := mocks.NewTokenManagerMock(false)
 	authenticateUserService := NewAuthenticationUser(userRepositoryInMemory, hahserMock, tokenManagerMock)
 
-	result, err := authenticateUserService.Perform(mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
+	result, err := authenticateUserService.Perform(context.Background(), mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
 
 	assert.Nil(t, result)
 	assert.IsType(t, err, errors.BadRequestError{})
@@ -62,7 +63,7 @@ func TestPerform_ShouldReturnBadRequestIfUserPasswordIsWrong(t *testing.T) {
 	tokenManagerMock := mocks.NewTokenManagerMock(false)
 	authenticateUserService := NewAuthenticationUser(userRepositoryInMemory, hahserMock, tokenManagerMock)
 
-	result, err := authenticateUserService.Perform(mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
+	result, err := authenticateUserService.Perform(context.Background(), mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
 
 	assert.Nil(t, result)
 	assert.IsType(t, err, errors.BadRequestError{})
@@ -79,7 +80,7 @@ func TestPerform_ShouldReturnInternalErrorIfSomeErrorOccurInTokenGeneration(t *t
 	tokenManagerMock := mocks.NewTokenManagerMock(true)
 	authenticateUserService := NewAuthenticationUser(userRepositoryInMemory, hahserMock, tokenManagerMock)
 
-	result, err := authenticateUserService.Perform(mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
+	result, err := authenticateUserService.Perform(context.Background(), mockedAuthenticationDto.Email, mockedAuthenticationDto.Password, "")
 
 	assert.Nil(t, result)
 	assert.IsType(t, err, errors.InternalError{})

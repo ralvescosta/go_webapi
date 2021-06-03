@@ -1,6 +1,7 @@
 package repos
 
 import (
+	"context"
 	"database/sql"
 	"log"
 
@@ -13,18 +14,19 @@ type userRepository struct {
 	db *sql.DB
 }
 
-func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
+func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error) {
 
 	sql := "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *"
 
-	prepare, err := r.db.Prepare(sql)
+	prepare, err := r.db.PrepareContext(ctx, sql)
 	if err != nil {
 		log.Printf("userRepository.Create - prepare statement: %v", err)
 		return nil, err
 	}
 
 	entity := &entities.User{}
-	err = prepare.QueryRow(
+	err = prepare.QueryRowContext(
+		ctx,
 		user.FirstName,
 		user.LastName,
 		user.Email,
@@ -47,7 +49,7 @@ func (r userRepository) Create(user *dtos.UserDto) (*entities.User, error) {
 	return entity, nil
 }
 
-func (r userRepository) FindByEmail(email string) (*entities.User, error) {
+func (r userRepository) FindByEmail(ctx context.Context, email string) (*entities.User, error) {
 	sql :=
 		`SELECT 
 			id AS Id,
@@ -61,7 +63,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 		FROM users
 		WHERE email = $1
 	`
-	prepare, err := r.db.Prepare(sql)
+	prepare, err := r.db.PrepareContext(ctx, sql)
 	if err != nil {
 		log.Printf("userRepository.FindByEmail - prepare statement: %v", err)
 		return nil, err
@@ -69,7 +71,7 @@ func (r userRepository) FindByEmail(email string) (*entities.User, error) {
 
 	entity := &entities.User{}
 
-	err = prepare.QueryRow(&email).Scan(
+	err = prepare.QueryRowContext(ctx, &email).Scan(
 		&entity.Id,
 		&entity.FirstName,
 		&entity.LastName,

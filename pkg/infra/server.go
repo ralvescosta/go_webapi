@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"go.elastic.co/apm/module/apmgin"
 
 	"webapi/pkg/app/services"
 	httphandlers "webapi/pkg/handlers/http_handlers"
@@ -33,7 +34,7 @@ type WebApiConfig struct {
 }
 
 func Start(config *WebApiConfig) error {
-	if config.Env != "development" {
+	if config.Env != "dev" {
 		writerReqsLogs, err := os.Create(config.WebApiReqsLog)
 		if err != nil {
 			err = fmt.Errorf("server.Start - create log writer")
@@ -44,6 +45,7 @@ func Start(config *WebApiConfig) error {
 	}
 
 	router := gin.Default()
+	router.Use(apmgin.Middleware(router))
 
 	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
 	if err != nil {

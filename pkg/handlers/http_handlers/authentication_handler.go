@@ -32,7 +32,7 @@ func (h authenticationHTTPHandler) Create(c *gin.Context) {
 		return
 	}
 
-	authenticatedUser, err := h.authenticationUserService.Perform(authDto.Email, authDto.Password, c.Request.RemoteAddr)
+	authenticatedUser, err := h.authenticationUserService.Perform(c, authDto.Email, authDto.Password, c.Request.RemoteAddr)
 	if err != nil {
 		switch err.(type) {
 		case errors.InternalError:
