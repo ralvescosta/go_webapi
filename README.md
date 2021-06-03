@@ -67,6 +67,8 @@ docker-compose up -d --build
 make migrate
 ```
 
+http://localhost:5601/app/kibana#/home/tutorial/apm
+
 ## Articles
 
 - [1] - [GoLang WebApi - pt-BR](https://ralvescosta.medium.com/como-estruturar-webapi-em-golang-e2a41502d809)
