@@ -2,7 +2,7 @@ migrate:
 	GO_ENV=dev go run migrations/main.go
 
 run:
-	GO_ENV=dev GIN_MODE=debug ELASTIC_APM_SERVICE_NAME=go_webpai go run main.go
+	GO_ENV=dev GIN_MODE=debug ELASTIC_APM_SERVICE_NAME=go_webpai ELASTIC_APM_LOG_LEVEL=debug go run main.go
 
 test:
 	GO_ENV=dev GIN_MODE=debug go test ./pkg/... -v

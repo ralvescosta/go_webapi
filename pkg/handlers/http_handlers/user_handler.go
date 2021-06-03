@@ -32,7 +32,7 @@ func (h *userHTTPHandler) Create(c *gin.Context) {
 		return
 	}
 
-	if err := h.userService.Register(userDto); err != nil {
+	if err := h.userService.Register(c, userDto); err != nil {
 		switch err.(type) {
 		case errors.InternalError:
 			handlers.InternalServerError(c, "Some internal Error occur, try again latter!")

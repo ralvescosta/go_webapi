@@ -1,10 +1,13 @@
 package mocks
 
-import "webapi/pkg/app/entities"
+import (
+	"context"
+	"webapi/pkg/app/entities"
+)
 
 type AuthenticationUserMocked struct{}
 
-func (m AuthenticationUserMocked) Perform(email, password, audience string) (*entities.AuthenticatedUser, error) {
+func (m AuthenticationUserMocked) Perform(ctx context.Context, email, password, audience string) (*entities.AuthenticatedUser, error) {
 	return nil, nil
 }
 
