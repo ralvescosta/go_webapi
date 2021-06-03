@@ -56,7 +56,7 @@ go get -u
 - Make sure you have **docker** and **docker-compose** installed:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 - Before running the container, create your own database and put the database name into the *.env* files

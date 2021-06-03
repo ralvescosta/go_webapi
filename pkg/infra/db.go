@@ -18,11 +18,11 @@ func GetConnection(host string, port int, user, password, dbName string) (*sql.D
 		return nil, err
 	}
 
-	err = db.Ping()
-	if err != nil {
-		log.Printf("error while check database connection: %v", err)
-		return nil, err
-	}
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Printf("error while check database connection: %v", err)
+	// 	return nil, err
+	// }
 
 	return db, nil
 }

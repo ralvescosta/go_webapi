@@ -22,11 +22,11 @@ RUN cp /build/main .
 FROM scratch
 
 ENV GO_ENV=prod
-ENV GIN_MODE=debug
+ENV GIN_MODE=release
 ENV ELASTIC_APM_SERVICE_NAME=go_webpai
 
 COPY --from=builder /dist /
-COPY ./.env.container /.env.prod
+COPY ./.env.prod /.env.prod
 
 EXPOSE 3333
 
