@@ -1,12 +1,13 @@
 package services
 
 import (
+	"context"
 	"webapi/pkg/app/dtos"
 	i "webapi/pkg/app/interfaces"
 )
 
 type IUserService interface {
-	Register(user *dtos.UserDto) error
+	Register(ctx context.Context, user *dtos.UserDto) error
 }
 
 type userService struct {
@@ -14,14 +15,14 @@ type userService struct {
 	hash i.IHasher
 }
 
-func (s *userService) Register(user *dtos.UserDto) error {
+func (s *userService) Register(ctx context.Context, user *dtos.UserDto) error {
 	passHashed, err := s.hash.Hahser(user.Password)
 	if err != nil {
 		return err
 	}
 
 	user.Password = passHashed
-	_, err = s.repo.Create(user)
+	_, err = s.repo.Create(ctx, user)
 	if err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -16,14 +17,18 @@ import (
 
 type tokenManager struct{}
 
+var fileReader = ioutil.ReadFile
+var parseRSAPrivateKey = jwt.ParseRSAPrivateKeyFromPEM
+var claimsGenerator = jwt.NewWithClaims
+
 func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error) {
-	privateKeyInBytes, err := ioutil.ReadFile("cert/id_rsa")
+	privateKeyInBytes, err := fileReader(os.Getenv("RSA_PRIVATE_KEY_DIR"))
 	if err != nil {
 		log.Printf("tokenManager.GenerateToken - privateKeyInBytes: %v", err)
 		return "", errors.New("error when try to read rsa private key")
 	}
 
-	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privateKeyInBytes)
+	privateKey, err := parseRSAPrivateKey(privateKeyInBytes)
 	if err != nil {
 		log.Printf("tokenManager.GenerateToken - ParseRSAPrivateKeyFromPEM: %v", err)
 		return "", errors.New("error when try to create rsa private key")
@@ -31,14 +36,14 @@ func (t tokenManager) GenerateToken(tokenData *dtos.TokenDataDto) (string, error
 
 	claims := jwt.StandardClaims{
 		Audience:  tokenData.Audience,
-		Issuer:    "Go WebApi Templete",
+		Issuer:    os.Getenv("APP_ISSUER"),
 		ExpiresAt: tokenData.ExpireIn.Unix(),
 		Id:        fmt.Sprintf("%d", tokenData.Id),
 		IssuedAt:  time.Now().Unix(),
 		NotBefore: tokenData.ExpireIn.Unix(),
 	}
 
-	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(privateKey)
+	token, err := claimsGenerator(jwt.SigningMethodRS256, claims).SignedString(privateKey)
 	if err != nil {
 		log.Printf("tokenManager.GenerateToken - generate token: %v", err)
 		return "", errors.New("error when try to create jwt")

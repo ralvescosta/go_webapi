@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"testing"
 	"webapi/mocks"
 	"webapi/pkg/app/dtos"
@@ -23,7 +24,7 @@ func TestRegister_CreateUserSuccessfully(t *testing.T) {
 	userRepositoryInMemory := mocks.NewUserRepositoryInMemory(false, &mockedUserEntity)
 	registerUserService := NewUserService(userRepositoryInMemory, hahserMock)
 
-	result := registerUserService.Register(&mockedUserDto)
+	result := registerUserService.Register(context.Background(), &mockedUserDto)
 
 	assert.Nil(t, result)
 }
@@ -33,7 +34,7 @@ func TestRegister_CreateUserWhenHasherFailure(t *testing.T) {
 	userRepositoryInMemory := mocks.NewUserRepositoryInMemory(false, &mockedUserEntity)
 	registerUserService := NewUserService(userRepositoryInMemory, hahserMock)
 
-	result := registerUserService.Register(&mockedUserDto)
+	result := registerUserService.Register(context.Background(), &mockedUserDto)
 
 	assert.Error(t, result)
 }
@@ -43,7 +44,7 @@ func TestRegister_CreateUserWhenUserRepoFailure(t *testing.T) {
 	userRepositoryInMemory := mocks.NewUserRepositoryInMemory(true, &mockedUserEntity)
 	registerUserService := NewUserService(userRepositoryInMemory, hahserMock)
 
-	result := registerUserService.Register(&mockedUserDto)
+	result := registerUserService.Register(context.Background(), &mockedUserDto)
 
 	assert.Error(t, result)
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	infra "webapi/pkg/infra"
 	"webapi/pkg/infra/env"
 
@@ -24,6 +25,15 @@ func WebApi() error {
 
 		WebApiReqsLog: viper.GetString("WEBAPI_REQS_LOG"),
 	}
+
+	os.Setenv("GO_ENV", viper.GetString("GO_ENV"))
+	os.Setenv("APP_HOST", viper.GetString("APP_HOST"))
+	os.Setenv("APP_PORT", viper.GetString("APP_PORT"))
+	os.Setenv("GIN_MODE", viper.GetString("GIN_MODE"))
+
+	os.Setenv("RSA_PRIVATE_KEY_DIR", viper.GetString("RSA_PRIVATE_KEY_DIR"))
+	os.Setenv("RSA_PUBLIC_KEY_DIR", viper.GetString("RSA_PUBLIC_KEY_DIR"))
+	os.Setenv("APP_ISSUER", viper.GetString("APP_ISSUER"))
 
 	return infra.Start(&configs)
 }

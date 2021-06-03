@@ -1,11 +1,12 @@
 package interfaces
 
 import (
+	"context"
 	"webapi/pkg/app/dtos"
 	"webapi/pkg/app/entities"
 )
 
 type IUserRepository interface {
-	Create(user *dtos.UserDto) (*entities.User, error)
-	FindByEmail(email string) (*entities.User, error)
+	Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error)
+	FindByEmail(ctx context.Context, email string) (*entities.User, error)
 }

@@ -22,6 +22,8 @@ This project was created in order to improve my knowledge in GoLang and REST API
 
 - 📝 User Management
 - 📝 Session using JWT with asymmetric keys
+- 📝 Basic Elastic APM Configuration
+- 🧑‍💻 Elastic Metricbeat and Filebeat
 - 🧑‍💻 Authentication Middleware
 
 ## Installation
@@ -44,12 +46,17 @@ make public-key
 go get -u
 ```
 
-### Create a PostgreSQL container
+### Create containers
+
+- *PostgreSQL*
+- *Elasticsearch*
+- *Kibana*
+- *Elastic APM*
 
 - Make sure you have **docker** and **docker-compose** installed:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 - Before running the container, create your own database and put the database name into the *.env* files

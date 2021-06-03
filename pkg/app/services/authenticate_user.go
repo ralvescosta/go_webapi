@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"time"
 	"webapi/pkg/app/dtos"
 	"webapi/pkg/app/entities"
@@ -9,7 +10,7 @@ import (
 )
 
 type IAuthenticationUser interface {
-	Perform(email, password string) (*entities.AuthenticatedUser, error)
+	Perform(ctx context.Context, email, password, audience string) (*entities.AuthenticatedUser, error)
 }
 
 type authenticationUser struct {
@@ -18,8 +19,8 @@ type authenticationUser struct {
 	tokenManager i.ITokenManager
 }
 
-func (s authenticationUser) Perform(email, password string) (*entities.AuthenticatedUser, error) {
-	user, err := s.repo.FindByEmail(email)
+func (s authenticationUser) Perform(ctx context.Context, email, password, audience string) (*entities.AuthenticatedUser, error) {
+	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return nil, errors.NewInternalError(err.Error())
 	}
@@ -34,7 +35,7 @@ func (s authenticationUser) Perform(email, password string) (*entities.Authentic
 	tokenDataDto := &dtos.TokenDataDto{
 		Id:       user.Id,
 		ExpireIn: time.Now().Add(time.Hour),
-		Audience: "1.1.1",
+		Audience: audience,
 	}
 	accessToken, err := s.tokenManager.GenerateToken(tokenDataDto)
 	if err != nil {
