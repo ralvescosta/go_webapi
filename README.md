@@ -23,6 +23,7 @@ This project was created in order to improve my knowledge in GoLang and REST API
 - 📝 User Management
 - 📝 Session using JWT with asymmetric keys
 - 📝 Basic Elastic APM Configuration
+- 🧑‍💻 Implement Logrus
 - 🧑‍💻 Elastic Metricbeat and Filebeat
 - 🧑‍💻 Authentication Middleware
 
