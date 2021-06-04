@@ -21,7 +21,7 @@ func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entiti
 
 	prepare, err := r.db.PrepareContext(ctx, sql)
 	if err != nil {
-		log.Printf("userRepository.Create - prepare statement: %v", err)
+		log.Error("userRepository.Create - prepare statement: %v", err)
 		return nil, err
 	}
 
@@ -43,7 +43,7 @@ func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entiti
 		&entity.DeletedAt,
 	)
 	if err != nil {
-		log.Printf("userRepository.Crete - query statement: %v", err)
+		log.Error("userRepository.Crete - query statement: %v", err)
 		return nil, err
 	}
 
@@ -66,7 +66,7 @@ func (r userRepository) FindByEmail(ctx context.Context, email string) (*entitie
 	`
 	prepare, err := r.db.PrepareContext(ctx, sql)
 	if err != nil {
-		log.Printf("userRepository.FindByEmail - prepare statement: %v", err)
+		log.Error("userRepository.FindByEmail - prepare statement: %v", err)
 		return nil, err
 	}
 
@@ -87,7 +87,7 @@ func (r userRepository) FindByEmail(ctx context.Context, email string) (*entitie
 			return nil, nil
 		}
 
-		log.Printf("userRepository.FindByEmail - query statement: %v", err)
+		log.Error("userRepository.FindByEmail - query statement: %v", err)
 		return nil, err
 	}
 
