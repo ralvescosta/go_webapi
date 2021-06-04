@@ -6,6 +6,7 @@ import (
 	"webapi/mocks"
 	"webapi/pkg/app/dtos"
 	"webapi/pkg/app/entities"
+	"webapi/pkg/app/errors"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -27,6 +28,20 @@ func TestRegister_CreateUserSuccessfully(t *testing.T) {
 	result := registerUserService.Register(context.Background(), &mockedUserDto)
 
 	assert.Nil(t, result)
+}
+
+func TestRegister_ShouldReturnAlreadyExistErrorIfUserAlreadyExist(t *testing.T) {
+	hahserMock := mocks.NewHasherMock(false, true)
+	user := &entities.User{
+		Email: "email@email.com",
+	}
+	userRepositoryInMemory := mocks.NewUserRepositoryInMemory(false, user)
+	registerUserService := NewUserService(userRepositoryInMemory, hahserMock)
+
+	result := registerUserService.Register(context.Background(), &mockedUserDto)
+
+	assert.Error(t, result)
+	assert.IsType(t, result, errors.AlreadyExisteError{})
 }
 
 func TestRegister_CreateUserWhenHasherFailure(t *testing.T) {

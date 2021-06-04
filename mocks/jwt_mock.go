@@ -27,7 +27,7 @@ func (m JwtMocked) ParseRSAPrivateKey(key []byte) (*rsa.PrivateKey, error) {
 		return nil, errors.New("parse rsa private key")
 	}
 
-	return rsa.GenerateKey(rand.Reader, 1024)
+	return rsa.GenerateKey(rand.Reader, 2048)
 }
 
 func (m JwtMocked) ClaimsGenerator(method jwt.SigningMethod, claims jwt.Claims) *jwt.Token {
