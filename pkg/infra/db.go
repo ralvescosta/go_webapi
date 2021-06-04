@@ -15,7 +15,7 @@ func GetConnection(host string, port int, user, password, dbName string) (*sql.D
 		host, port, user, password, dbName)
 	db, err := apmsql.Open("postgres", connectionString)
 	if err != nil {
-		log.Error("error while connect to database: %v", err)
+		log.Errorf("error while connect to database: %v", err)
 		return nil, err
 	}
 
