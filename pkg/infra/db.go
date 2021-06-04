@@ -3,7 +3,8 @@ package infra
 import (
 	"database/sql"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"go.elastic.co/apm/module/apmsql"
 	_ "go.elastic.co/apm/module/apmsql/pq"
@@ -14,7 +15,7 @@ func GetConnection(host string, port int, user, password, dbName string) (*sql.D
 		host, port, user, password, dbName)
 	db, err := apmsql.Open("postgres", connectionString)
 	if err != nil {
-		log.Printf("error while connect to database: %v", err)
+		log.Error("error while connect to database: %v", err)
 		return nil, err
 	}
 

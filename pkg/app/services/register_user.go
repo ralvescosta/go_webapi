@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"webapi/pkg/app/dtos"
+	"webapi/pkg/app/errors"
 	i "webapi/pkg/app/interfaces"
 )
 
@@ -16,6 +17,14 @@ type userService struct {
 }
 
 func (s *userService) Register(ctx context.Context, user *dtos.UserDto) error {
+	alreadyExist, err := s.repo.FindByEmail(ctx, user.Email)
+	if err != nil {
+		return err
+	}
+	if alreadyExist != nil {
+		return errors.NewAlreadyExisteError("user already exist")
+	}
+
 	passHashed, err := s.hash.Hahser(user.Password)
 	if err != nil {
 		return err
