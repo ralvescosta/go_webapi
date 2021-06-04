@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin"
 
 	"webapi/pkg/app/services"
@@ -34,17 +35,27 @@ type WebApiConfig struct {
 }
 
 func Start(config *WebApiConfig) error {
+
+	router := gin.New()
+
 	if config.Env != "dev" {
 		writerReqsLogs, err := os.Create(config.WebApiReqsLog)
 		if err != nil {
 			err = fmt.Errorf("server.Start - create log writer")
 			log.Fatal(err)
 		}
+
 		gin.DefaultWriter = io.MultiWriter(writerReqsLogs)
+
+		log.SetFormatter(&log.JSONFormatter{})
 		log.SetOutput(writerReqsLogs)
+
+		router.Use(LoggerToFile())
+	} else {
+		router.Use(gin.Logger())
 	}
 
-	router := gin.Default()
+	router.Use(gin.Recovery())
 	router.Use(apmgin.Middleware(router))
 
 	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
@@ -71,4 +82,25 @@ func Start(config *WebApiConfig) error {
 	presenter.NewAuthenticationRoute(router, authHTTPHandler)
 
 	return router.Run(fmt.Sprintf("%s:%d", config.AppHost, config.AppPort))
+}
+
+func LoggerToFile() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		startTime := time.Now()
+
+		c.Next()
+
+		endTime := time.Now()
+		latencyTime := endTime.Sub(startTime)
+
+		log.WithContext(c).WithFields(
+			log.Fields{
+				"statusCode": c.Writer.Status(),
+				"latency":    latencyTime.String(),
+				"clientIP":   c.ClientIP(),
+				"method":     c.Request.Method,
+				"uri":        c.Request.RequestURI,
+			},
+		).Info("Request Log")
+	}
 }

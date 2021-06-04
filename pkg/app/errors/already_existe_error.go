@@ -8,6 +8,6 @@ func (e AlreadyExisteError) Error() string {
 	return e.Message
 }
 
-func NewEAlreadyExisteError(m string) AlreadyExisteError {
+func NewAlreadyExisteError(m string) AlreadyExisteError {
 	return AlreadyExisteError{Message: m}
 }
