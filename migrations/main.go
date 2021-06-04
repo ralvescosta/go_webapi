@@ -3,7 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	_ "github.com/lib/pq"
 	"github.com/spf13/viper"

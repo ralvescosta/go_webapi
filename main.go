@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"webapi/cmd"
 )

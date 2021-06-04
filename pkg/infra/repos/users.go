@@ -3,7 +3,8 @@ package repos
 import (
 	"context"
 	"database/sql"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"webapi/pkg/app/dtos"
 	"webapi/pkg/app/entities"

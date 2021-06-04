@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin"
 
 	"webapi/pkg/app/services"
@@ -34,17 +34,27 @@ type WebApiConfig struct {
 }
 
 func Start(config *WebApiConfig) error {
+	log.SetFormatter(&log.JSONFormatter{})
+	standardFields := log.Fields{
+		"hostname": config.AppHost,
+		"appname":  "GoWebApi",
+	}
+	log.WithFields(standardFields)
+
 	if config.Env != "dev" {
 		writerReqsLogs, err := os.Create(config.WebApiReqsLog)
 		if err != nil {
 			err = fmt.Errorf("server.Start - create log writer")
 			log.Fatal(err)
 		}
+
 		gin.DefaultWriter = io.MultiWriter(writerReqsLogs)
 		log.SetOutput(writerReqsLogs)
 	}
 
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery())
+	router.Use(gin.Logger())
 	router.Use(apmgin.Middleware(router))
 
 	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)

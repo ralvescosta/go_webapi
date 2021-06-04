@@ -1,8 +1,7 @@
 package hasher
 
 import (
-	"log"
-
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 
 	"webapi/pkg/app/errors"
