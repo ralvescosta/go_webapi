@@ -17,7 +17,7 @@ type userRepository struct {
 
 func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error) {
 
-	sql := "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *"
+	sql := "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?) RETURNING *"
 
 	prepare, err := r.db.PrepareContext(ctx, sql)
 	if err != nil {
