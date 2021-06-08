@@ -21,7 +21,7 @@ func (s *userService) Register(ctx context.Context, user *dtos.UserDto) error {
 	if err != nil {
 		return err
 	}
-	if alreadyExist.Email != "" {
+	if alreadyExist != nil && alreadyExist.Email != "" {
 		return errors.NewAlreadyExisteError("user already exist")
 	}
 
