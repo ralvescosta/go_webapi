@@ -56,19 +56,31 @@ go get -u
 
 - Make sure you have **docker** and **docker-compose** installed:
 
+- To create PostgreSQL and WebApi containers
+
 ```bash
 docker-compose up -d --build
 ```
 
+- To create Elastic containers 
+
+```bash
+./elastic docker-compose up -d
+```
+
+- To run only WebApi container
+
+```bash
+docker run -p 3333:3333  --network=elastic_gowebapi ralvescosta/go_webapi
+```
+
 - Before running the container, create your own database and put the database name into the *.env* files
 
-### Run Migration
+### Run Migration - If you run out side the container environment
 
 ```bash
 make migrate
 ```
-
-http://localhost:5601/app/kibana#/home/tutorial/apm
 
 ## Articles
 

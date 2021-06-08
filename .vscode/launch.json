@@ -9,7 +9,9 @@
       "program": "${workspaceFolder}",
       "env": {
         "GO_ENV": "dev",
-        "GIN_MODE": "debug"
+        "GIN_MODE": "debug",
+        "ELASTIC_APM_SERVICE_NAME": "go_webpai",
+        "ELASTIC_APM_LOG_LEVEL": "debug"
       },
       "args": ["run", "main.go"]
     }

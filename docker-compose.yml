@@ -11,8 +11,6 @@ services:
       - ./api:/var/lib/webapi/
     depends_on:
       - db
-    networks:
-      - gowepapi
 
   db:
     image: postgres
@@ -26,12 +24,11 @@ services:
     volumes: 
       - ./postgres-data:/var/lib/database/data
       - ./migrations/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
-    networks:
-      - gowepapi
 
 networks:
-  gowepapi:
-    driver: bridge
+  default:
+    external: true
+    name: elastic_gowebapi
 
 volumes:
   api:
