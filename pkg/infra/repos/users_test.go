@@ -7,8 +7,10 @@ import (
 	"testing"
 	"time"
 	"webapi/pkg/app/dtos"
+	"webapi/pkg/app/entities"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
 
 func newDbMock() (*sql.DB, sqlmock.Sqlmock) {
@@ -27,18 +29,50 @@ var user = &dtos.UserDto{
 	Password:  "123456",
 }
 
-func TestT(t *testing.T) {
+func TestUserRepo_ShouldCreateUserCorrectly(t *testing.T) {
 	db, mock := newDbMock()
 	userRepo := NewUserRepository(db)
 
-	query := "INSERT INTO users \\(first_name, last_name, email, password\\) VALUES \\(\\?, \\?, \\?, \\?\\) RETURNING \\*"
+	query := "INSERT INTO users \\(first_name, last_name, email, password\\) VALUES \\(\\$1, \\$2, \\$3, \\$4\\) RETURNING \\*"
 	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name", "email", "password", "created_at", "updated_at", "deleted_at"}).
-		AddRow(1, user.FirstName, user.LastName, user.Email, user.Password, time.Now().Format("2006-01-02 15:04:05"), time.Now().Format("2006-01-02 15:04:05"), nil)
+		AddRow(1, user.FirstName, user.LastName, user.Email, user.Password, time.Now(), time.Now(), nil)
 
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectQuery().WithArgs(user.FirstName, user.LastName, user.Email, user.Password).WillReturnRows(rows)
 
-	userRepo.Create(context.Background(), user)
+	result, err := userRepo.Create(context.Background(), user)
 
-	// fmt.Print(result, err)
+	assert.Nil(t, err)
+	assert.NotNil(t, result)
+	assert.IsType(t, result, &entities.User{})
+	assert.Equal(t, result.Email, user.Email)
+}
+
+func TestUserRepo_ShouldOccurErrInPrepareStatement(t *testing.T) {
+	db, mock := newDbMock()
+	userRepo := NewUserRepository(db)
+
+	mock.ExpectPrepare("")
+
+	result, err := userRepo.Create(context.Background(), user)
+
+	assert.NotNil(t, err)
+	assert.Nil(t, result)
+}
+
+func TestUserRepo_ShouldOccurErrBeforeScanStatatment(t *testing.T) {
+	db, mock := newDbMock()
+	userRepo := NewUserRepository(db)
+
+	query := "INSERT INTO users \\(first_name, last_name, email, password\\) VALUES \\(\\$1, \\$2, \\$3, \\$4\\) RETURNING \\*"
+	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name", "email", "password", "created_at", "updated_at", "deleted_at"}).
+		AddRow(1, user.FirstName, user.LastName, user.Email, user.Password, time.Now().String(), time.Now().String(), nil)
+
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectQuery().WithArgs(user.FirstName, user.LastName, user.Email, user.Password).WillReturnRows(rows)
+
+	result, err := userRepo.Create(context.Background(), user)
+
+	assert.NotNil(t, err)
+	assert.Nil(t, result)
 }
