@@ -24,7 +24,8 @@ FROM scratch
 ENV GO_ENV=prod
 ENV GIN_MODE=release
 ENV ELASTIC_APM_SERVICE_NAME=go_webpai
-ENV ELASTIC_APM_SERVER_URL=http://host.docker.internal:8200
+ENV ELASTIC_APM_SERVER_URL=http://apm-server:8200
+ENV ELASTIC_APM_LOG_LEVEL=debug
 
 COPY --from=builder /dist /
 COPY ./.env.prod /.env.prod
