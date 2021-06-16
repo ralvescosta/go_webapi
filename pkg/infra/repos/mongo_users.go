@@ -3,6 +3,7 @@ package repos
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"webapi/pkg/app/dtos"
 	"webapi/pkg/app/entities"
@@ -24,6 +25,9 @@ func (r mongoUserRepository) Create(ctx context.Context, user *dtos.UserDto) (*e
 			{"last_name", user.LastName},
 			{"email", user.Email},
 			{"password", user.Password},
+			{"created_at", time.Now()},
+			{"updated_at", time.Now()},
+			{"deleted_at", nil},
 		})
 	if err != nil {
 		return nil, err
@@ -33,7 +37,17 @@ func (r mongoUserRepository) Create(ctx context.Context, user *dtos.UserDto) (*e
 }
 
 func (r mongoUserRepository) FindByEmail(ctx context.Context, email string) (*entities.User, error) {
-	return &entities.User{}, nil
+	collection := r.db.Collection("users")
+
+	user := &entities.User{}
+	err := collection.FindOne(ctx, bson.D{{"email", email}}).Decode(user)
+	if err == mongo.ErrNoDocuments {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func NewUserMongoRepository(db *mongo.Database) interfaces.IUserRepository {
