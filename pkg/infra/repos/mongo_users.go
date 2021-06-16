@@ -13,11 +13,11 @@ import (
 )
 
 type mongoUserRepository struct {
-	db *mongo.Client
+	db *mongo.Database
 }
 
 func (r mongoUserRepository) Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error) {
-	collection := r.db.Database("GO").Collection("users")
+	collection := r.db.Collection("users")
 	res, err := collection.InsertOne(ctx,
 		bson.D{
 			{"first_name", user.FirstName},
@@ -36,6 +36,6 @@ func (r mongoUserRepository) FindByEmail(ctx context.Context, email string) (*en
 	return &entities.User{}, nil
 }
 
-func NewUserMongoRepository(db *mongo.Client) interfaces.IUserRepository {
+func NewUserMongoRepository(db *mongo.Database) interfaces.IUserRepository {
 	return &mongoUserRepository{db: db}
 }

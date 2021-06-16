@@ -12,11 +12,17 @@ func WebApi() error {
 	env.ConfigEnvs()
 
 	configs := infra.WebApiConfig{
-		DBHost:     viper.GetString("DB_HOST"),
-		DBPort:     viper.GetInt("DB_PORT"),
-		DBUser:     viper.GetString("DB_USER"),
-		DBPassword: viper.GetString("DB_PASSWORD"),
-		DBName:     viper.GetString("DB_NAME"),
+		SQLDbHost:     viper.GetString("SQL_DB_HOST"),
+		SQLDbPort:     viper.GetInt("SQL_DB_PORT"),
+		SQLDbUser:     viper.GetString("SQL_DB_USER"),
+		SQLDbPassword: viper.GetString("SQL_DB_PASSWORD"),
+		SQLDbName:     viper.GetString("SQL_DB_NAME"),
+
+		MongoDbHost:     viper.GetString("MONGO_DB_HOST"),
+		MongoDbPort:     viper.GetInt("MONGO_DB_PORT"),
+		MongoDbUser:     viper.GetString("MONGO_DB_USER"),
+		MongoDbPassword: viper.GetString("MOND_DB_PASSWORD"),
+		MongoDbName:     viper.GetString("MONGO_DB_NAME"),
 
 		Env:     viper.GetString("GO_ENV"),
 		AppHost: viper.GetString("APP_HOST"),

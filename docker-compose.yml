@@ -21,7 +21,7 @@ services:
       - POSTGRES_DB=GO
       - DATABASE_HOST=postgres
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes: 
       - ./postgres-data:/var/lib/database/postgres
       - ./migrations/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
