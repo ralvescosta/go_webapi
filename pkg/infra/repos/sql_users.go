@@ -11,11 +11,11 @@ import (
 	"webapi/pkg/app/interfaces"
 )
 
-type userRepository struct {
+type sqlUerRepository struct {
 	db *sql.DB
 }
 
-func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error) {
+func (r sqlUerRepository) Create(ctx context.Context, user *dtos.UserDto) (*entities.User, error) {
 
 	sql := "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *"
 
@@ -50,7 +50,7 @@ func (r userRepository) Create(ctx context.Context, user *dtos.UserDto) (*entiti
 	return entity, nil
 }
 
-func (r userRepository) FindByEmail(ctx context.Context, email string) (*entities.User, error) {
+func (r sqlUerRepository) FindByEmail(ctx context.Context, email string) (*entities.User, error) {
 	sql :=
 		`SELECT 
 			id AS Id,
@@ -94,6 +94,6 @@ func (r userRepository) FindByEmail(ctx context.Context, email string) (*entitie
 	return entity, nil
 }
 
-func NewUserRepository(db *sql.DB) interfaces.IUserRepository {
-	return &userRepository{db: db}
+func NewUserSQLRepository(db *sql.DB) interfaces.IUserRepository {
+	return &sqlUerRepository{db: db}
 }

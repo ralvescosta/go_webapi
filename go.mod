@@ -26,6 +26,7 @@ require (
 	github.com/pelletier/go-toml v1.9.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
+	github.com/ralvescosta/dotenv v0.0.0-20210610201511-64bac06a2cc5 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
@@ -39,6 +40,7 @@ require (
 	go.elastic.co/apm v1.12.0 // indirect
 	go.elastic.co/apm/module/apmgin v1.12.0
 	go.elastic.co/apm/module/apmsql v1.12.0
+	go.mongodb.org/mongo-driver v1.5.3 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/net v0.0.0-20210510120150-4163338589ed // indirect

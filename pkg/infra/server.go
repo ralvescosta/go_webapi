@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -10,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"webapi/pkg/app/services"
 	httphandlers "webapi/pkg/handlers/http_handlers"
@@ -20,11 +23,17 @@ import (
 )
 
 type WebApiConfig struct {
-	DBHost     string
-	DBPort     int
-	DBUser     string
-	DBPassword string
-	DBName     string
+	SQLDbHost     string
+	SQLDbPort     int
+	SQLDbUser     string
+	SQLDbPassword string
+	SQLDbName     string
+
+	MongoDbHost     string
+	MongoDbPort     int
+	MongoDbUser     string
+	MongoDbPassword string
+	MongoDbName     string
 
 	Env     string
 	AppHost string
@@ -58,26 +67,38 @@ func Start(config *WebApiConfig) error {
 	router.Use(gin.Recovery())
 	router.Use(apmgin.Middleware(router))
 
-	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
+	sqlDb, err := GetSQLConnection(config.SQLDbHost, config.SQLDbPort, config.SQLDbUser, config.SQLDbPassword, config.SQLDbName)
 	if err != nil {
 		return errors.New("DB CONNECTION ERROR - " + err.Error())
 	}
 	defer func() {
-		if db != nil {
-			db.Close()
+		if sqlDb != nil {
+			sqlDb.Close()
 		}
 	}()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%v@%s:%v", config.MongoDbUser, config.MongoDbPassword, config.MongoDbHost, config.MongoDbPort)))
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
+	mongoDb := client.Database(config.MongoDbName)
+
 	// Create Infra Instancies
-	userRepo := repos.NewUserRepository(db)
+	userNoSQLRepo := repos.NewUserMongoRepository(mongoDb)
+	// userSQLRepo := repos.NewUserSQLRepository(sqlDb)
 	hasher := hasher.NewHahser()
 	tokenManager := token.NewTokenManager()
 
 	// Register All Routes
-	userService := services.NewUserService(userRepo, hasher)
+	userService := services.NewUserService(userNoSQLRepo, hasher)
 	userHTTPHandler := httphandlers.NewUserHTTPHandler(userService)
 	presenter.NewUserRoutes(router, userHTTPHandler)
 
-	authService := services.NewAuthenticationUser(userRepo, hasher, tokenManager)
+	authService := services.NewAuthenticationUser(userNoSQLRepo, hasher, tokenManager)
 	authHTTPHandler := httphandlers.NewAuthenticationHTTPHandler(authService)
 	presenter.NewAuthenticationRoute(router, authHTTPHandler)
 

@@ -31,7 +31,7 @@ var user = &dtos.UserDto{
 
 func TestUserRepo_ShouldCreateUserCorrectly(t *testing.T) {
 	db, mock := newDbMock()
-	userRepo := NewUserRepository(db)
+	userRepo := NewUserSQLRepository(db)
 
 	query := "INSERT INTO users \\(first_name, last_name, email, password\\) VALUES \\(\\$1, \\$2, \\$3, \\$4\\) RETURNING \\*"
 	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name", "email", "password", "created_at", "updated_at", "deleted_at"}).
@@ -50,7 +50,7 @@ func TestUserRepo_ShouldCreateUserCorrectly(t *testing.T) {
 
 func TestUserRepo_ShouldOccurErrInPrepareStatement(t *testing.T) {
 	db, mock := newDbMock()
-	userRepo := NewUserRepository(db)
+	userRepo := NewUserSQLRepository(db)
 
 	mock.ExpectPrepare("")
 
@@ -62,7 +62,7 @@ func TestUserRepo_ShouldOccurErrInPrepareStatement(t *testing.T) {
 
 func TestUserRepo_ShouldOccurErrBeforeScanStatatment(t *testing.T) {
 	db, mock := newDbMock()
-	userRepo := NewUserRepository(db)
+	userRepo := NewUserSQLRepository(db)
 
 	query := "INSERT INTO users \\(first_name, last_name, email, password\\) VALUES \\(\\$1, \\$2, \\$3, \\$4\\) RETURNING \\*"
 	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name", "email", "password", "created_at", "updated_at", "deleted_at"}).

@@ -10,7 +10,7 @@ import (
 	_ "go.elastic.co/apm/module/apmsql/pq"
 )
 
-func GetConnection(host string, port int, user, password, dbName string) (*sql.DB, error) {
+func GetSQLConnection(host string, port int, user, password, dbName string) (*sql.DB, error) {
 	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbName)
 	db, err := apmsql.Open("postgres", connectionString)
@@ -19,11 +19,11 @@ func GetConnection(host string, port int, user, password, dbName string) (*sql.D
 		return nil, err
 	}
 
-	// err = db.Ping()
-	// if err != nil {
-	// 	log.Printf("error while check database connection: %v", err)
-	// 	return nil, err
-	// }
+	err = db.Ping()
+	if err != nil {
+		log.Printf("error while check database connection: %v", err)
+		return nil, err
+	}
 
 	return db, nil
 }

@@ -10,20 +10,31 @@ services:
     volumes:
       - ./api:/var/lib/webapi/
     depends_on:
-      - db
+      - postgres
+      - mongo
 
-  db:
+  postgres:
     image: postgres
-    container_name: db
+    container_name: postgres
     environment:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=GO
-      - DATABASE_HOST=db
+      - DATABASE_HOST=postgres
     ports:
-      - '5432:5432'
+      - 5432:5432
     volumes: 
-      - ./postgres-data:/var/lib/database/data
+      - ./postgres-data:/var/lib/database/postgres
       - ./migrations/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=mongodb
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    ports: 
+      - 27017:27017
+    volumes: 
+      - ./mongo-data:/var/lib/database/mongo
 
 networks:
   default:
@@ -33,3 +44,4 @@ networks:
 volumes:
   api:
   postgres-data:
+  mongo-data:
