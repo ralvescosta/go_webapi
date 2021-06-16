@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -10,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"go.elastic.co/apm/module/apmgin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"webapi/pkg/app/services"
 	httphandlers "webapi/pkg/handlers/http_handlers"
@@ -58,17 +61,27 @@ func Start(config *WebApiConfig) error {
 	router.Use(gin.Recovery())
 	router.Use(apmgin.Middleware(router))
 
-	db, err := GetConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
+	sqlDb, err := GetSQLConnection(config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName)
 	if err != nil {
 		return errors.New("DB CONNECTION ERROR - " + err.Error())
 	}
 	defer func() {
-		if db != nil {
-			db.Close()
+		if sqlDb != nil {
+			sqlDb.Close()
 		}
 	}()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://mongodb:123456@localhost:27017"))
+	defer func() {
+		if err = client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
+
 	// Create Infra Instancies
-	userRepo := repos.NewUserRepository(db)
+	userRepo := repos.NewUserSQLRepository(sqlDb)
 	hasher := hasher.NewHahser()
 	tokenManager := token.NewTokenManager()
 

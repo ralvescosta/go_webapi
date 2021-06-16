@@ -39,6 +39,7 @@ require (
 	go.elastic.co/apm v1.12.0 // indirect
 	go.elastic.co/apm/module/apmgin v1.12.0
 	go.elastic.co/apm/module/apmsql v1.12.0
+	go.mongodb.org/mongo-driver v1.5.3 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/net v0.0.0-20210510120150-4163338589ed // indirect
