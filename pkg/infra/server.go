@@ -93,7 +93,7 @@ func LoggerToFile() gin.HandlerFunc {
 		endTime := time.Now()
 		latencyTime := endTime.Sub(startTime)
 
-		log.WithContext(c).WithFields(
+		log.WithContext(c.Request.Context()).WithFields(
 			log.Fields{
 				"statusCode": c.Writer.Status(),
 				"latency":    latencyTime.String(),
